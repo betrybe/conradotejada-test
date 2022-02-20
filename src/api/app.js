@@ -62,4 +62,23 @@ app.post('/users', expressAsyncHandler(async (req, res) => {
     }
     }));
 
+    
+  app.post('/recipes', isAuth, expressAsyncHandler(async (req, res) => {
+    console.log(req.user);
+    const recipe = new Recipes({
+      name: req.body.name,
+      ingredients: req.body.ingredients,
+      preparetion: req.body.preparetion,
+      userId: req.user.id,
+    });
+
+    const createRecipe = recipe.save();
+
+    if (createRecipe) {
+    res.send(recipe);
+    } else {
+    res.status(400).send({ message: 'Invalid entries. Try again' });
+}
+}));
+
 module.exports = app;
