@@ -81,4 +81,9 @@ app.post('/users', expressAsyncHandler(async (req, res) => {
 }
 }));
 
+app.get('/recipes', expressAsyncHandler(async (req, res) => {
+  const recipes = await Recipes.find();
+  res.send(recipes);  
+}));
+
 module.exports = app;
