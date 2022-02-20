@@ -178,4 +178,6 @@ app.post('/login', expressAsyncHandler(async (req, res) => {
     }
   }));
 
+  app.use('/images', express.static(path.join('./src/uploads', '..', 'uploads')));
+
 module.exports = app;
