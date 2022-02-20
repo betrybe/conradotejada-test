@@ -9,7 +9,11 @@ const dotenv = require('dotenv');
 
 const User = require('../models/userModel');
 
+const Recipes = require('../models/recipesModel');
+
 const { generateToken, isAuth } = require('./utils');
+
+const seedDB = require('../../seed');
 
 dotenv.config();
 
@@ -17,6 +21,8 @@ mongoose.connect(process.env.MONGO_DB_URL, {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
 });
+
+seedDB();
 
 const app = express();
 app.use(express.json());
