@@ -9,6 +9,8 @@ const dotenv = require('dotenv');
 
 const User = require('../models/userModel');
 
+const { generateToken, isAuth } = require('./utils');
+
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_DB_URL, {
@@ -45,4 +47,19 @@ app.post('/users', expressAsyncHandler(async (req, res) => {
     res.status(409).send({ message: 'Email already registered' });
   }
   }));
+
+  app.post('/login', expressAsyncHandler(async (req, res) => {
+    if (req.body.email && req.body.password) { 
+        const user = await User.findOne({ email: req.body.email });
+        if (user && (user.password === req.body.password)) {
+            const token = generateToken(user);
+            res.send(token);
+        } else {
+            res.status(400).send({ message: 'Incorrect username or password' });
+        }
+    } else {
+        res.status(401).send({ message: 'All fields must be filled' });
+    }
+    }));
+
 module.exports = app;
