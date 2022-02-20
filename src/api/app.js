@@ -86,4 +86,17 @@ app.get('/recipes', expressAsyncHandler(async (req, res) => {
   res.send(recipes);  
 }));
 
+app.get('/recipes/:id', expressAsyncHandler(async (req, res) => {
+  if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const recipe = await Recipes.findOne({ _id: req.params.id });
+    if (recipe) {
+      res.send(recipe); 
+    } else {
+      res.status(404).send({ message: 'recipe not found' });
+    }
+  } else {
+    res.status(404).send({ message: 'recipe not found' });
+  }
+  }));
+
 module.exports = app;
