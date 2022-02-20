@@ -105,4 +105,21 @@ app.get('/recipes/:id', expressAsyncHandler(async (req, res) => {
   }
   }));
 
+  app.put('/recipes/:id', isAuth, expressAsyncHandler(async (req, res) => {
+    const recipe = await Recipes.findOne({ _id: req.params.id });
+    if (recipe) {
+    if ((recipe.userId === req.user.id) || (req.user.role === 'admin')) {
+      recipe.name = req.body.name;
+      recipe.ingredients = req.body.ingredients;
+      recipe.preparetion = req.body.preparetion;
+      recipe.save();
+      res.status(200).send(recipe);
+    } else {
+      res.status(401).send({ message: 'invalid user' });
+    }
+    } else {
+      res.status(404).send({ message: 'recipe not found' });
+    }
+  }));
+
 module.exports = app;
