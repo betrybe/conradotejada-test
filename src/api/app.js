@@ -122,4 +122,18 @@ app.get('/recipes/:id', expressAsyncHandler(async (req, res) => {
     }
   }));
 
+  app.delete('/recipes/:id', isAuth, expressAsyncHandler(async (req, res) => {
+    const recipe = await Recipes.findOne({ _id: req.params.id });
+    if (recipe) {
+    if ((recipe.userId === req.user.id) || (req.user.role === 'admin')) {
+    recipe.remove();
+    res.status(204).send(); 
+    } else {
+      res.status(404).send({ message: 'recipe not found' });
+    }
+  } else {
+    res.status(404).send({ message: 'recipe not found' });
+  }
+  }));
+
 module.exports = app;
